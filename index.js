@@ -12,11 +12,8 @@ try {
   // Set provider and signer
   const provider = new ethers.providers.AlchemyProvider("homestead")
 
-  const testBalance = provider
-    .getBalance("jacopo.eth")
-    .then(() => console.log(testBalance, "testBalance"))
+  provider.getBalance("jacopo.eth").then((value) => console.log(value, "value"))
 
-  console.log(testBalance, "testBalance")
   console.log(slicer, "slicer")
   console.log(`Address ${address}!`)
   console.log(`Slicer ${slicer}!`)

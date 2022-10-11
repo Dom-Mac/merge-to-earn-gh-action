@@ -3,6 +3,7 @@ description: "Greet someone and record the time"
 inputs:
   slicer:
     required: true
+  alchemy_api_key: ${{ secrets.ALCHEMY_API_KEY }}
 
 runs:
   using: "node16"
