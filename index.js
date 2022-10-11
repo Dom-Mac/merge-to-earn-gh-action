@@ -12,10 +12,7 @@ try {
   const slices = payload.inputs.slices
 
   // Set provider and signer
-  const provider = new ethers.providers.AlchemyProvider(
-    "homestead",
-    alchemyApiKey
-  )
+  const provider = new ethers.providers.AlchemyProvider("goerli", alchemyApiKey)
   provider.getBalance("jacopo.eth").then((value) => console.log(value, "value"))
   const signer = ethers.Wallet.createRandom().connect(provider)
   console.log(signer, "signer")
@@ -25,13 +22,8 @@ try {
     signer
   )
   const getProductAllowed = async () => {
-    const isPayeeAllowed = await slicerContract.isPayeeAllowed(
-      "0x4D5d7d63989BBE6358a3352A2449d59Aa5A08267"
-    )
-    console.log(
-      isPayeeAllowed,
-      "isPayeeAllowed 0x4D5d7d63989BBE6358a3352A2449d59Aa5A08267"
-    )
+    const isPayeeAllowed = await slicerContract.isPayeeAllowed(address)
+    console.log(isPayeeAllowed, "isPayeeAllowed")
   }
   getProductAllowed()
 
