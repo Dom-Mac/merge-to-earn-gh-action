@@ -4,6 +4,7 @@ const github = require("@actions/github")
 try {
   // `address` input defined in action metadata file
   const slicer = core.getInput("slicer")
+  console.log(slicer, "slicer")
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`)
