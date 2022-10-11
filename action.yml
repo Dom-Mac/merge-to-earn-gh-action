@@ -9,12 +9,5 @@ inputs:
     required: true
 
 runs:
-  - name: Setup Node
-    uses: actions/setup-node@v3
-    with:
-      node-version: 16.13.x
-      cache: npm
-  - name: npm ci
-    run: npm ci
-  - name: Run script
-    run: node dist/index.js
+  using: "node16"
+  main: "dist/index.js"
