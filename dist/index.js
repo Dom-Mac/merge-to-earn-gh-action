@@ -47950,6 +47950,8 @@ const { ethers } = __nccwpck_require__(5593)
 try {
   // get inputs from the workflow
   const slicer = core.getInput("slicer")
+  const key = core.getInput("alchemy_api_key")
+  console.log(key)
   const payload = github.context.payload
   const address = payload.inputs.address
   const slices = payload.inputs.slices
