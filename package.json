@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "ncc build index.js --license licenses.txt",
-    "publish": "ncc build index.js --license licenses.txt && git add . && git commit -m 'v$npm_config_vtp' && git tag -a -m 'v$npm_config_vtp' $npm_config_vtp && git push --follow-tags"
+    "publish": "ncc build index.js --license licenses.txt && git add . && git commit -m 'v$npm_config_vtp' && git tag -a -m 'v$npm_config_vtp' v$npm_config_vtp && git push --follow-tags"
   },
   "keywords": [],
   "author": "",
