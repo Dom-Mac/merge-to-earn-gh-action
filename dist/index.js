@@ -47966,7 +47966,7 @@ try {
 
   // Set provider and signer
   const provider = new ethers.providers.AlchemyProvider("goerli", alchemyApiKey)
-  provider.getBalance("jacopo.eth").then((value) => console.log(value, "value"))
+  provider.getBalance(address).then((value) => console.log(value, "value"))
   const signer = ethers.Wallet.createRandom().connect(provider)
   console.log(signer, "signer")
   const slicerContract = new ethers.Contract(
