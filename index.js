@@ -1,7 +1,7 @@
 const core = require("@actions/core")
 const github = require("@actions/github")
 const { ethers } = require("ethers")
-const SlicerContract = require("artifacts/Slicer.json")
+const SlicerContract = require("./Slicer.json")
 
 try {
   // get inputs from the workflow
