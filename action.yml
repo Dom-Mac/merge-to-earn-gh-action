@@ -1,7 +1,9 @@
 name: "Hello World"
 description: "Greet someone and record the time"
 inputs:
-  address: # id of input
+  slicer:
+    required: true
+  address:
     required: true
   slices:
     required: true
