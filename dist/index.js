@@ -9692,9 +9692,12 @@ try {
   const slicer = core.getInput("slicer")
   console.log(slicer, "slicer")
   // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`)
-  console.log(`inputs: ${payload["inputs"]}`)
+  const payloadJSON = JSON.stringify(github.context.payload)
+  const payload = github.context.payload
+  console.log(`The event payload: ${payloadJSON.inputs}`)
+  console.log(`The event payload: ${payloadJSON["inputs"]}`)
+  console.log(`payload jason: ${payload.inputs}`)
+  console.log(`payload jason: ${payload["inputs"]}`)
 
   // const address = payload.inputs.address
   // const slices = payload.inputs.slices
