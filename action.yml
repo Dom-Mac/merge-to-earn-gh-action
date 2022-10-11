@@ -3,10 +3,6 @@ description: "Greet someone and record the time"
 inputs:
   slicer:
     required: true
-  address:
-    required: true
-  slices:
-    required: true
 
 runs:
   using: "node16"
