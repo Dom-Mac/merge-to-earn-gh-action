@@ -47980,7 +47980,7 @@ try {
   }
   getProductAllowed()
 
-  console.log(slicer, "slicer")
+  console.log(slicerAddress, "slicer")
   console.log(`Address ${address}!`)
   console.log(`Slicer ${slicer}!`)
   console.log(`Mint ${slices} slices!`)
