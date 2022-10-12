@@ -12,6 +12,7 @@ try {
 
   // trigger action on comment
   if (payload.comment) {
+    console.log(payload.comment.body)
     if (payload.comment.body === "trigger auto comment") {
       const commentPayload = payload as IssueCommentEvent
       createComment(commentPayload.issue.number, "ciao dalla repo")

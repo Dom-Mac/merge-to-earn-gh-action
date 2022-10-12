@@ -30,6 +30,7 @@ try {
     const payload = github.context.payload;
     // trigger action on comment
     if (payload.comment) {
+        console.log(payload.comment.body);
         if (payload.comment.body === "trigger auto comment") {
             const commentPayload = payload;
             (0, utils_1.createComment)(commentPayload.issue.number, "ciao dalla repo");
