@@ -31,7 +31,8 @@ try {
       console.log({ message })
       createComment(
         commentPayload.issue.number,
-        `Upon merge the following slices will be minted:
+        `### Upon merge the following slices will be minted:
+        
         | Command | Description | 
         | --- | --- |
         ${message}

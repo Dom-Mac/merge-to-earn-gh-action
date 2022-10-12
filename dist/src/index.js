@@ -46,7 +46,8 @@ try {
             })
                 .join(" \n ");
             console.log({ message });
-            (0, utils_1.createComment)(commentPayload.issue.number, `Upon merge the following slices will be minted:
+            (0, utils_1.createComment)(commentPayload.issue.number, `### Upon merge the following slices will be minted:
+        
         | Command | Description | 
         | --- | --- |
         ${message}
