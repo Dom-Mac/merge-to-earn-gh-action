@@ -5,6 +5,8 @@ inputs:
     required: true
   alchemy_api_key:
     required: true
+  GITHUB_TOKEN:
+    required: true
 
 runs:
   using: "node16"
