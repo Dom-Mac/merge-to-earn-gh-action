@@ -2,7 +2,10 @@ import * as core from "@actions/core"
 import * as github from "@actions/github"
 import { createComment } from "./utils"
 import { ethers } from "ethers"
-import { IssueCommentEvent } from "@octokit/webhooks-definitions/schema"
+import {
+  IssueCommentEvent,
+  PullRequestEvent
+} from "@octokit/webhooks-definitions/schema"
 
 try {
   const payload = github.context.payload
@@ -11,10 +14,15 @@ try {
   if (payload.comment) {
     if (payload.comment.body === "trigger auto comment") {
       const commentPayload = payload as IssueCommentEvent
-      createComment(commentPayload, "ciao dalla repo")
+      createComment(commentPayload.issue.number, "ciao dalla repo")
     }
   } else {
-    // trigger action on merge
+    // trigger action on merge or on open
+    const prPayload = payload as PullRequestEvent
+    if (prPayload.action === "opened") {
+      createComment(prPayload.pull_request.number, "ciao dalla repo on init")
+    } else {
+    }
   }
 
   console.log("payload", payload)

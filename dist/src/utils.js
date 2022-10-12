@@ -31,12 +31,12 @@ function getOctokit() {
     return github.getOctokit(token);
 }
 exports.getOctokit = getOctokit;
-async function createComment(payload, message) {
+async function createComment(number, message) {
     const octokit = getOctokit();
     const { context } = github;
     const { data } = await octokit.rest.issues.createComment({
         ...context.repo,
-        issue_number: payload.issue.number,
+        issue_number: number,
         body: message
     });
 }

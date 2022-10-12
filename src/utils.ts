@@ -7,15 +7,12 @@ export function getOctokit() {
   return github.getOctokit(token)
 }
 
-export async function createComment(
-  payload: IssueCommentEvent,
-  message: string
-) {
+export async function createComment(number: number, message: string) {
   const octokit = getOctokit()
   const { context } = github
   const { data } = await octokit.rest.issues.createComment({
     ...context.repo,
-    issue_number: payload.issue.number,
+    issue_number: number,
     body: message
   })
 }
