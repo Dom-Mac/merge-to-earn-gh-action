@@ -12,10 +12,22 @@ try {
 
   // trigger action on comment
   if (payload.comment) {
-    console.log(payload.comment.body)
-    if (payload.comment.body === "trigger auto comment") {
+    const text: string = payload.comment.body
+    const requiredText = "### Contributor slices request"
+    const splitText = text.split("-")
+
+    if (splitText[0].trim() === requiredText) {
       const commentPayload = payload as IssueCommentEvent
-      createComment(commentPayload.issue.number, "ciao dalla repo")
+      const message = splitText
+        .map((el) => {
+          const [address, sliceAmount] = el.split(":")
+          return `- ${sliceAmount.trim()} to ${address.trim()}`
+        })
+        .join(" /n ")
+      createComment(
+        commentPayload.issue.number,
+        `Upon merge the following slices will be minted: /n ${message}`
+      )
     }
   } else {
     // trigger action on merge or on open
