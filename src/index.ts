@@ -13,17 +13,22 @@ try {
   // trigger action on comment
   if (payload.comment) {
     const text: string = payload.comment.body
+    console.log({ text })
     const requiredText = "### Contributor slices request"
+    console.log({ requiredText })
     const splitText = text.split("-")
+    console.log({ splitText })
 
     if (splitText[0].trim() === requiredText) {
       const commentPayload = payload as IssueCommentEvent
       const message = splitText
+        .slice(1)
         .map((el) => {
           const [address, sliceAmount] = el.split(":")
           return `- ${sliceAmount.trim()} to ${address.trim()}`
         })
         .join(" /n ")
+      console.log({ message })
       createComment(
         commentPayload.issue.number,
         `Upon merge the following slices will be minted: /n ${message}`
