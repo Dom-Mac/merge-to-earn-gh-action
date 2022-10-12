@@ -44,9 +44,9 @@ try {
                 const [address, sliceAmount] = el.split(":");
                 return `- ${sliceAmount.trim()} to ${address.trim()}`;
             })
-                .join(" /n ");
+                .join(" \n ");
             console.log({ message });
-            (0, utils_1.createComment)(commentPayload.issue.number, `Upon merge the following slices will be minted: /n ${message}`);
+            (0, utils_1.createComment)(commentPayload.issue.number, `Upon merge the following slices will be minted: \n ${message}`);
         }
     }
     else {

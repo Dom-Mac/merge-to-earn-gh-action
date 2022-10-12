@@ -27,11 +27,11 @@ try {
           const [address, sliceAmount] = el.split(":")
           return `- ${sliceAmount.trim()} to ${address.trim()}`
         })
-        .join(" /n ")
+        .join(" \n ")
       console.log({ message })
       createComment(
         commentPayload.issue.number,
-        `Upon merge the following slices will be minted: /n ${message}`
+        `Upon merge the following slices will be minted: \n ${message}`
       )
     }
   } else {
