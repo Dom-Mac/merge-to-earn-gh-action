@@ -42,11 +42,15 @@ try {
                 .slice(1)
                 .map((el) => {
                 const [address, sliceAmount] = el.split(":");
-                return `- ${sliceAmount.trim()} to ${address.trim()}`;
+                return `| ${sliceAmount.trim()} | ${address.trim()} |`;
             })
                 .join(" \n ");
             console.log({ message });
-            (0, utils_1.createComment)(commentPayload.issue.number, `Upon merge the following slices will be minted: \n ${message}`);
+            (0, utils_1.createComment)(commentPayload.issue.number, `Upon merge the following slices will be minted:
+        | Command | Description | 
+        | --- | --- |
+        ${message}
+        `);
         }
     }
     else {
