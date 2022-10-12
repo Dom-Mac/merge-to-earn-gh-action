@@ -25,18 +25,14 @@ try {
         .slice(1)
         .map((el) => {
           const [address, sliceAmount] = el.split(":")
-          return `| ${sliceAmount.trim()} | ${address.trim()} |`
+          return "| " + sliceAmount.trim() + " | " + address.trim() + " |"
         })
         .join(" \n ")
       console.log({ message })
       createComment(
         commentPayload.issue.number,
-        `### Upon merge the following slices will be minted:
-        
-        | Command | Description | 
-        | --- | --- |
-        ${message}
-        `
+        "### Upon merge the following slices will be minted: \n| Command | Description |\n| --- | --- |\n" +
+          message
       )
     }
   } else {
