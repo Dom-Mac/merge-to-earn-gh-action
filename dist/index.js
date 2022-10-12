@@ -8,7 +8,7 @@ try {
   const payload = github.context.payload
   const event = core.getInput("event")
   console.log("payload", payload)
-  console.log({ event })
+  console.log("event", event)
 } catch (error) {
   core.setFailed(error.message)
 }
