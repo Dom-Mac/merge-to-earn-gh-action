@@ -6,7 +6,6 @@ inputs:
   alchemy_api_key:
     required: true
   event:
-    type: mapping
     required: true
 
 runs:
