@@ -23,23 +23,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createComment = exports.getOctokit = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
-const utils_1 = require("./utils");
-try {
-    const payload = github.context.payload;
-    // trigger action on comment
-    if (payload.comment) {
-        if (payload.comment.body === "trigger auto comment") {
-            const commentPayload = payload;
-            (0, utils_1.createComment)(commentPayload, "ciao dalla repo");
-        }
-    }
-    else {
-        // trigger action on merge
-    }
-    console.log("payload", payload);
+function getOctokit() {
+    const token = core.getInput("GITHUB_TOKEN", { required: true });
+    return github.getOctokit(token);
 }
-catch (error) {
-    core.setFailed(error.message);
+exports.getOctokit = getOctokit;
+async function createComment(payload, message) {
+    const octokit = getOctokit();
+    const { context } = github;
+    const { data } = await octokit.rest.issues.createComment({
+        ...context.repo,
+        issue_number: payload.issue.number,
+        body: message
+    });
 }
+exports.createComment = createComment;
