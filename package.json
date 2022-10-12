@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ncc build index.js --license licenses.txt",
-    "publish": "ncc build index.js --license licenses.txt && git add . && git commit -m 'v$npm_config_vtp' && git tag -a -m 'v$npm_config_vtp' v$npm_config_vtp && git push --follow-tags"
+    "build": "tsc -p tsconfig.build.json",
+    "publish": "tsc -p tsconfig.build.json && git add . && git commit -m 'v$npm_config_vtp' && git tag -a -m 'v$npm_config_vtp' v$npm_config_vtp && git push --follow-tags"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,8 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "ethers": "^5.7.1"
+    "@types/node": "^18.8.4",
+    "ethers": "^5.7.1",
+    "typescript": "^4.8.4"
   }
 }
