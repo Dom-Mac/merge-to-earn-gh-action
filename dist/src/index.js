@@ -31,16 +31,20 @@ async function default_1() {
     try {
         const payload = github.context.payload;
         const slicer = core.getInput("slicer");
-        // trigger action on comment
+        console.log("payload", payload);
+        // Triggers action on comment
         if (payload.comment) {
+            console.log("---- comment action ----");
             const text = payload.comment.body;
             const requiredText = "### Contributor slices request";
             const splitText = text.split("-");
             let message;
             if (splitText[0].trim() === requiredText) {
+                console.log("---- required text ----");
                 const commentPayload = payload; // type casting
                 // Check if the comment user is the pr owner
                 if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
+                    console.log("---- required text user authorized ----");
                     let totalSlices = 0;
                     // TODO: Add checks on addresses and sliceAmounts types
                     // custom message defines the slices | address table
@@ -55,6 +59,7 @@ async function default_1() {
                     message = (0, messages_1.onRequestMessage)(customMessage, String(totalSlices));
                 }
                 else {
+                    console.log("---- required text user not authorized ----");
                     message = "User not authorized, only the PR owner can request slices";
                 }
                 (0, githubHandler_1.createComment)(commentPayload.issue.number, message);
@@ -66,10 +71,7 @@ async function default_1() {
             if (prPayload.action === "opened") {
                 (0, githubHandler_1.createComment)(prPayload.pull_request.number, (0, messages_1.onPrOpenedMessage)(slicer));
             }
-            else {
-            }
         }
-        console.log("payload", payload);
     }
     catch (error) {
         core.setFailed(error.message);
