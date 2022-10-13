@@ -25,6 +25,9 @@ export default async function init() {
         const commentPayload = <IssueCommentEvent>payload // type casting
         // Check if comment's user is the PR owner
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
+          // Set bot message to fire in create comment
+          botMessage = onRequestMessage(splitText)
+
           // TODO: Add type checks on addresses and sliceAmounts
           // Edit first bot comment
           const comments = await fetch(commentPayload.issue.comments_url)
@@ -33,11 +36,8 @@ export default async function init() {
               el.user.login === "github-actions[bot]" &&
               el.body.includes("### Hi Anon")
           )[0]
-
-          console.log(firstBotComment)
-
-          // Set bot message to fire in create comment
-          botMessage = onRequestMessage(splitText)
+          const newFirstMessage = onPrOpenedMessage(slicer) + "\n" + botMessage
+          editComment(firstBotComment.id, newFirstMessage)
         } else {
           botMessage =
             "User not authorized, only the PR owner can request slices"
