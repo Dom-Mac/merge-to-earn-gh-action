@@ -1,6 +1,5 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
-import { IssueCommentEvent } from "@octokit/webhooks-definitions/schema"
 
 export function getOctokit() {
   const token = core.getInput("GITHUB_TOKEN", { required: true })
@@ -15,4 +14,5 @@ export async function createComment(number: number, message: string) {
     issue_number: number,
     body: message
   })
+  return data
 }
