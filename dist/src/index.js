@@ -49,6 +49,9 @@ async function init() {
                     // TODO: Add type checks on addresses and sliceAmounts
                     // Edit first bot comment
                     const comments = await (0, fetch_1.default)(commentPayload.issue.comments_url);
+                    const firstBotComment = comments.filter((el) => el.user.login === "github-actions[bot]" &&
+                        el.body.includes("### Hi Anon"))[0];
+                    console.log(firstBotComment);
                     // Set bot message to fire in create comment
                     botMessage = (0, messages_1.onRequestMessage)(splitText);
                 }

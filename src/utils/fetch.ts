@@ -4,5 +4,5 @@ export default async function fetch(url: string) {
   const _http = new HttpClient("http-client")
   const res: HttpClientResponse = await _http.get(url)
 
-  return await res.readBody()
+  return JSON.parse(await res.readBody())
 }

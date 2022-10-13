@@ -1,1 +1,1 @@
-export default function fetch(url: string): Promise<string>;
+export default function fetch(url: string): Promise<any>;

@@ -28,6 +28,13 @@ export default async function init() {
           // TODO: Add type checks on addresses and sliceAmounts
           // Edit first bot comment
           const comments = await fetch(commentPayload.issue.comments_url)
+          const firstBotComment = comments.filter(
+            (el: any) =>
+              el.user.login === "github-actions[bot]" &&
+              el.body.includes("### Hi Anon")
+          )[0]
+
+          console.log(firstBotComment)
 
           // Set bot message to fire in create comment
           botMessage = onRequestMessage(splitText)
