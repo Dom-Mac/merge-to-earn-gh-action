@@ -11,3 +11,5 @@ inputs:
 runs:
   using: "node16"
   main: "dist/src/index.js"
+    with: 
+      SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
