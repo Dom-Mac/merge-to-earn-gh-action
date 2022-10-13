@@ -23,14 +23,14 @@ export function onRequestMessage(splitText: any) {
     .map((el: any) => {
       const [address, sliceAmount] = el.split(":")
       totalSlices += Number(sliceAmount)
-      return "| " + sliceAmount.trim() + " | " + address.trim() + " |"
+      return "| " + address.trim() + " | " + sliceAmount.trim() + " |"
     })
     .join(" \n ")
 
   return (
-    "### New upcoming slices distribution: \n| Slices | Address |\n| --- | --- |\n" +
+    "### New upcoming slices distribution: \n| Address | Slices |\n| --- | --- |\n" +
     customMessage +
-    "\n **Total slices minted:** " +
+    "\n \n **Total slices minted:** " +
     String(totalSlices)
   )
 }
