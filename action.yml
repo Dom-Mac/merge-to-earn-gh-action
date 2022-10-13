@@ -7,7 +7,6 @@ inputs:
     required: true
   GITHUB_TOKEN:
     required: true
-  SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
 
 runs:
   using: "node16"

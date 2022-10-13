@@ -2,7 +2,7 @@ import * as core from "@actions/core"
 import * as github from "@actions/github"
 
 export function getOctokit() {
-  const token = core.getInput("SECRET_TOKEN", { required: true })
+  const token = core.getInput("GITHUB_TOKEN", { required: true })
   return github.getOctokit(token)
 }
 

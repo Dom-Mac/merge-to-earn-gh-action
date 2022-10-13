@@ -27,7 +27,7 @@ exports.editComment = exports.createComment = exports.getOctokit = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 function getOctokit() {
-    const token = core.getInput("SECRET_TOKEN", { required: true });
+    const token = core.getInput("GITHUB_TOKEN", { required: true });
     return github.getOctokit(token);
 }
 exports.getOctokit = getOctokit;
