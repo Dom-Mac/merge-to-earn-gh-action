@@ -49,9 +49,6 @@ async function init() {
                     // TODO: Add type checks on addresses and sliceAmounts
                     // Edit first bot comment
                     const comments = await (0, fetch_1.default)(commentPayload.issue.comments_url);
-                    console.log(comments);
-                    console.log(comments.message);
-                    console.log(await comments.readBody());
                     // Set bot message to fire in create comment
                     botMessage = (0, messages_1.onRequestMessage)(splitText);
                 }
