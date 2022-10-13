@@ -7,7 +7,7 @@ import {
 } from "@octokit/webhooks-definitions/schema"
 import { onPrOpenedMessage, onRequestMessage } from "./utils/messages"
 
-export default async function () {
+export default async function init() {
   try {
     const payload = github.context.payload
     const slicer = core.getInput("slicer")
@@ -57,3 +57,5 @@ export default async function () {
     core.setFailed(error.message)
   }
 }
+
+init()

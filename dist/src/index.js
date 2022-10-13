@@ -27,7 +27,7 @@ const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 const githubHandler_1 = require("./utils/githubHandler");
 const messages_1 = require("./utils/messages");
-async function default_1() {
+async function init() {
     try {
         const payload = github.context.payload;
         const slicer = core.getInput("slicer");
@@ -77,4 +77,5 @@ async function default_1() {
         core.setFailed(error.message);
     }
 }
-exports.default = default_1;
+exports.default = init;
+init();
