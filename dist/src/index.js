@@ -22,11 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 const githubHandler_1 = require("./utils/githubHandler");
 const messages_1 = require("./utils/messages");
+const fetch_1 = __importDefault(require("./utils/fetch"));
 async function init() {
     try {
         const payload = github.context.payload;
@@ -34,35 +38,28 @@ async function init() {
         console.log("payload", payload);
         // Triggers action on comment
         if (payload.comment) {
-            console.log("---- comment action ----");
             const text = payload.comment.body;
             const requiredText = "### Contributor slices request";
             const splitText = text.split("-");
-            let message;
+            let botMessage;
             if (splitText[0].trim() === requiredText) {
-                console.log("---- required text ----");
                 const commentPayload = payload; // type casting
-                // Check if the comment user is the pr owner
+                // Check if comment's user is the PR owner
                 if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
-                    console.log("---- required text user authorized ----");
-                    let totalSlices = 0;
-                    // TODO: Add checks on addresses and sliceAmounts types
-                    // custom message defines the slices | address table
-                    const customMessage = splitText
-                        .slice(1)
-                        .map((el) => {
-                        const [address, sliceAmount] = el.split(":");
-                        totalSlices += Number(sliceAmount);
-                        return "| " + sliceAmount.trim() + " | " + address.trim() + " |";
-                    })
-                        .join(" \n ");
-                    message = (0, messages_1.onRequestMessage)(customMessage, String(totalSlices));
+                    // TODO: Add type checks on addresses and sliceAmounts
+                    // Edit first bot comment
+                    const comments = await (0, fetch_1.default)(commentPayload.issue.comments_url);
+                    console.log(comments);
+                    console.log(comments.message);
+                    console.log(await comments.readBody());
+                    // Set bot message to fire in create comment
+                    botMessage = (0, messages_1.onRequestMessage)(splitText);
                 }
                 else {
-                    console.log("---- required text user not authorized ----");
-                    message = "User not authorized, only the PR owner can request slices";
+                    botMessage =
+                        "User not authorized, only the PR owner can request slices";
                 }
-                (0, githubHandler_1.createComment)(commentPayload.issue.number, message);
+                (0, githubHandler_1.createComment)(commentPayload.issue.number, botMessage);
             }
         }
         else {

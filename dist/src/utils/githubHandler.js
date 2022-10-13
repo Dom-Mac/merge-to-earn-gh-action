@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createComment = exports.getOctokit = void 0;
+exports.editComment = exports.createComment = exports.getOctokit = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 function getOctokit() {
@@ -42,3 +42,14 @@ async function createComment(number, message) {
     return data;
 }
 exports.createComment = createComment;
+async function editComment(id, message) {
+    const octokit = getOctokit();
+    const { context } = github;
+    const { data } = await octokit.rest.issues.updateComment({
+        ...context.repo,
+        comment_id: id,
+        body: message
+    });
+    return data;
+}
+exports.editComment = editComment;

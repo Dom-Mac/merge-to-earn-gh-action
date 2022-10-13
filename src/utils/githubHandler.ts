@@ -16,3 +16,14 @@ export async function createComment(number: number, message: string) {
   })
   return data
 }
+
+export async function editComment(id: number, message: string) {
+  const octokit = getOctokit()
+  const { context } = github
+  const { data } = await octokit.rest.issues.updateComment({
+    ...context.repo,
+    comment_id: id,
+    body: message
+  })
+  return data
+}

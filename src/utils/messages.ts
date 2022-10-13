@@ -13,11 +13,24 @@ export function onPrOpenedMessage(slicer: string) {
   `
 }
 
-export function onRequestMessage(customMessage: string, totalSlices: string) {
+// TODO fix params type
+export function onRequestMessage(splitText: any) {
+  let totalSlices = 0
+  // custom message defines the slices | address table
+  const customMessage = splitText
+    .slice(1)
+    // TODO fix type
+    .map((el: any) => {
+      const [address, sliceAmount] = el.split(":")
+      totalSlices += Number(sliceAmount)
+      return "| " + sliceAmount.trim() + " | " + address.trim() + " |"
+    })
+    .join(" \n ")
+
   return (
     "### New upcoming slices distribution: \n| Slices | Address |\n| --- | --- |\n" +
     customMessage +
     "\n **Total slices minted:** " +
-    totalSlices
+    String(totalSlices)
   )
 }

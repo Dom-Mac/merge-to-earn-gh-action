@@ -16,10 +16,22 @@ function onPrOpenedMessage(slicer) {
   `;
 }
 exports.onPrOpenedMessage = onPrOpenedMessage;
-function onRequestMessage(customMessage, totalSlices) {
+// TODO fix params type
+function onRequestMessage(splitText) {
+    let totalSlices = 0;
+    // custom message defines the slices | address table
+    const customMessage = splitText
+        .slice(1)
+        // TODO fix type
+        .map((el) => {
+        const [address, sliceAmount] = el.split(":");
+        totalSlices += Number(sliceAmount);
+        return "| " + sliceAmount.trim() + " | " + address.trim() + " |";
+    })
+        .join(" \n ");
     return ("### New upcoming slices distribution: \n| Slices | Address |\n| --- | --- |\n" +
         customMessage +
         "\n **Total slices minted:** " +
-        totalSlices);
+        String(totalSlices));
 }
 exports.onRequestMessage = onRequestMessage;

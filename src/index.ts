@@ -1,11 +1,12 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
-import { createComment } from "./utils/githubHandler"
+import { createComment, editComment } from "./utils/githubHandler"
 import {
   IssueCommentEvent,
   PullRequestEvent
 } from "@octokit/webhooks-definitions/schema"
 import { onPrOpenedMessage, onRequestMessage } from "./utils/messages"
+import fetch from "./utils/fetch"
 
 export default async function init() {
   try {
@@ -15,36 +16,29 @@ export default async function init() {
 
     // Triggers action on comment
     if (payload.comment) {
-      console.log("---- comment action ----")
       const text: string = payload.comment.body
       const requiredText = "### Contributor slices request"
       const splitText = text.split("-")
-      let message: string
+      let botMessage: string
 
       if (splitText[0].trim() === requiredText) {
-        console.log("---- required text ----")
         const commentPayload = <IssueCommentEvent>payload // type casting
-        // Check if the comment user is the pr owner
+        // Check if comment's user is the PR owner
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
-          console.log("---- required text user authorized ----")
-          let totalSlices = 0
-          // TODO: Add checks on addresses and sliceAmounts types
-          // custom message defines the slices | address table
-          const customMessage = splitText
-            .slice(1)
-            .map((el) => {
-              const [address, sliceAmount] = el.split(":")
-              totalSlices += Number(sliceAmount)
-              return "| " + sliceAmount.trim() + " | " + address.trim() + " |"
-            })
-            .join(" \n ")
+          // TODO: Add type checks on addresses and sliceAmounts
+          // Edit first bot comment
+          const comments = await fetch(commentPayload.issue.comments_url)
+          console.log(comments)
+          console.log(comments.message)
+          console.log(await comments.readBody())
 
-          message = onRequestMessage(customMessage, String(totalSlices))
+          // Set bot message to fire in create comment
+          botMessage = onRequestMessage(splitText)
         } else {
-          console.log("---- required text user not authorized ----")
-          message = "User not authorized, only the PR owner can request slices"
+          botMessage =
+            "User not authorized, only the PR owner can request slices"
         }
-        createComment(commentPayload.issue.number, message)
+        createComment(commentPayload.issue.number, botMessage)
       }
     } else {
       // Triggers respectively the action on merge or the one on PR opened
