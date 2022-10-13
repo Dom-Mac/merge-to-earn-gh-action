@@ -1,50 +1,51 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
-import { createComment } from "./utils/github"
+import { createComment } from "./utils/githubHandler"
 import {
   IssueCommentEvent,
   PullRequestEvent
 } from "@octokit/webhooks-definitions/schema"
+import { onPrOpenedMessage, onRequestMessage } from "./utils/messages"
 
 export default async function () {
   try {
     const payload = github.context.payload
+    const slicer = core.getInput("slicer")
 
     // trigger action on comment
     if (payload.comment) {
       const text: string = payload.comment.body
       const requiredText = "### Contributor slices request"
       const splitText = text.split("-")
+      let message: string
 
       if (splitText[0].trim() === requiredText) {
-        const commentPayload = payload as IssueCommentEvent
-        const contributorsURL = payload.repository?.contributors_url
-        // const _http = new httpm.HttpClient("http-client-tests")
-        // const res: httpm.HttpClientResponse = await _http.get(contributorsURL)
+        const commentPayload = <IssueCommentEvent>payload // type casting
+        // Check if the comment user is the pr owner
+        if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
+          let totalSlices = 0
+          // TODO: Add checks on addresses and sliceAmounts types
+          // custom message defines the slices | address table
+          const customMessage = splitText
+            .slice(1)
+            .map((el) => {
+              const [address, sliceAmount] = el.split(":")
+              totalSlices += Number(sliceAmount)
+              return "| " + sliceAmount.trim() + " | " + address.trim() + " |"
+            })
+            .join(" \n ")
 
-        let totalSlices = 0
-        const message = splitText
-          .slice(1)
-          .map((el) => {
-            const [address, sliceAmount] = el.split(":")
-            totalSlices += Number(sliceAmount)
-            return "| " + sliceAmount.trim() + " | " + address.trim() + " |"
-          })
-          .join(" \n ")
-
-        createComment(
-          commentPayload.issue.number,
-          "### New upcoming slices distribution: \n| Slices | Address |\n| --- | --- |\n" +
-            message +
-            "\n **Total slices minted:** " +
-            totalSlices
-        )
+          message = onRequestMessage(customMessage, String(totalSlices))
+        } else {
+          message = "User not authorized, only the PR owner can request slices"
+        }
+        createComment(commentPayload.issue.number, message)
       }
     } else {
-      // trigger action on merge or on open
-      const prPayload = payload as PullRequestEvent
+      // Triggers respectively the action on merge or the one on PR opened
+      const prPayload = <PullRequestEvent>payload
       if (prPayload.action === "opened") {
-        createComment(prPayload.pull_request.number, "ciao dalla repo on init")
+        createComment(prPayload.pull_request.number, onPrOpenedMessage(slicer))
       } else {
       }
     }
