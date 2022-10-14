@@ -47,7 +47,6 @@ export async function onSlicesRequestMessage(
 ): Promise<[string, boolean]> {
   let totalSlices = 0
   let isSuccess = false
-  // custom message defines the slices | address table
   const newSplitText = splitText.slice(1)
   const resolvedArray = []
 

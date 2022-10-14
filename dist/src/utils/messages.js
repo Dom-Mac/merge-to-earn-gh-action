@@ -66,7 +66,6 @@ exports.isValidAddress = isValidAddress;
 async function onSlicesRequestMessage(splitText) {
     let totalSlices = 0;
     let isSuccess = false;
-    // custom message defines the slices | address table
     const newSplitText = splitText.slice(1);
     const resolvedArray = [];
     for (let i = 0; i < newSplitText.length; i++) {
