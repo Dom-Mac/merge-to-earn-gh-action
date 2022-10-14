@@ -47,7 +47,7 @@ async function init() {
                 // Check if comment's user is the PR owner
                 if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
                     // Set bot message to fire in create comment
-                    botMessage = (0, messages_1.onRequestMessage)(splitText);
+                    botMessage = await (0, messages_1.onRequestMessage)(splitText);
                     // TODO: Add type checks on addresses and sliceAmounts
                     // Edit first bot comment
                     const comments = await (0, fetch_1.default)(commentPayload.issue.comments_url);

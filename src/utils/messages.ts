@@ -1,3 +1,6 @@
+import { ethers } from "ethers"
+import * as core from "@actions/core"
+
 export function onPrOpenedMessage(slicer: string) {
   return `### Hi Anon 
   This repository adopts a **merge to earn** mechanic and is represented by slicer: ${slicer}
@@ -13,23 +16,48 @@ export function onPrOpenedMessage(slicer: string) {
   `
 }
 
+const resolveEns = async (address: string) => {
+  const alchemyId = core.getInput("alchemy_api_key")
+  const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyId)
+
+  try {
+    const resolved =
+      address.substring(address.length - 4) == ".eth"
+        ? await provider.resolveName(address)
+        : address
+    if (address.substring(address.length - 4) === ".eth" && !resolved) {
+      throw Error
+    }
+    return resolved
+  } catch (err) {}
+}
+
+export function isValidAddress(address: string) {
+  return address.match(/^0x[a-fA-F0-9]{40}$/) || address.match(/.eth$/)
+}
+
 // TODO fix params type
-export function onRequestMessage(splitText: any) {
+export async function onRequestMessage(splitText: any) {
   let totalSlices = 0
   // custom message defines the slices | address table
-  const customMessage = splitText
-    .slice(1)
-    // TODO fix type
-    .map((el: any) => {
-      const [address, sliceAmount] = el.split(":")
+  const newSplitText = splitText.slice(1)
+
+  const resolvedArray = []
+  for (let i = 0; i < newSplitText.length; i++) {
+    const el: string = newSplitText[i]
+    const [address, sliceAmount] = el.split(":")
+    if (Number(sliceAmount) && isValidAddress(address)) {
+      const resolved = await resolveEns(address)
       totalSlices += Number(sliceAmount)
-      return "| " + address.trim() + " | " + sliceAmount.trim() + " |"
-    })
-    .join(" \n ")
+      resolvedArray.push(
+        "| " + resolved?.trim() + " | " + sliceAmount.trim() + " |"
+      )
+    }
+  }
 
   return (
     "### New upcoming slices distribution: \n| Address | Slices |\n| --- | --- |\n" +
-    customMessage +
+    resolvedArray.join(" \n ") +
     "\n \n **Total slices minted:** " +
     String(totalSlices)
   )

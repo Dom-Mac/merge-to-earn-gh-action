@@ -26,7 +26,7 @@ export default async function init() {
         // Check if comment's user is the PR owner
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
           // Set bot message to fire in create comment
-          botMessage = onRequestMessage(splitText)
+          botMessage = await onRequestMessage(splitText)
 
           // TODO: Add type checks on addresses and sliceAmounts
           // Edit first bot comment
