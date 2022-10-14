@@ -29,7 +29,9 @@ const resolveEns = async (address: string) => {
       throw Error
     }
     return resolved
-  } catch (err) {}
+  } catch (error) {
+    core.setFailed("ENS not resolved")
+  }
 }
 
 export function isValidAddress(address: string) {

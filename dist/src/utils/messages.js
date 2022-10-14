@@ -53,7 +53,9 @@ const resolveEns = async (address) => {
         }
         return resolved;
     }
-    catch (err) { }
+    catch (error) {
+        core.setFailed("ENS not resolved");
+    }
 };
 function isValidAddress(address) {
     return address.match(/^0x[a-fA-F0-9]{40}$/) || address.match(/.eth$/);
