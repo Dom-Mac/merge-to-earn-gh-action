@@ -23,9 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onSlicesRequestMessage = exports.isValidAddress = exports.onPrOpenedMessage = void 0;
+exports.onSlicesRequestMessage = exports.isValidAddress = exports.onPrOpenedMessage = exports.baseReviewMessage = void 0;
 const ethers_1 = require("ethers");
 const core = __importStar(require("@actions/core"));
+exports.baseReviewMessage = "Please review your request and submit it again.";
 function onPrOpenedMessage(slicer) {
     return `### Hi Anon 
   This repository adopts a **merge to earn** mechanic and is represented by slicer: ${slicer}
@@ -64,25 +65,39 @@ exports.isValidAddress = isValidAddress;
 // TODO fix params type
 async function onSlicesRequestMessage(splitText) {
     let totalSlices = 0;
+    let isSuccess = false;
     // custom message defines the slices | address table
     const newSplitText = splitText.slice(1);
-    let isSuccess = false;
     const resolvedArray = [];
     for (let i = 0; i < newSplitText.length; i++) {
         const el = newSplitText[i];
         const [address, sliceAmount] = el.split(":");
-        if (Number(sliceAmount) && isValidAddress(address)) {
-            const resolved = await resolveEns(address);
-            if (resolved) {
-                totalSlices += Number(sliceAmount);
-                resolvedArray.push("| " + resolved.trim() + " | " + sliceAmount.trim() + " |");
+        if (Number(sliceAmount)) {
+            if (isValidAddress(address)) {
+                const resolved = await resolveEns(address);
+                if (resolved) {
+                    totalSlices += Number(sliceAmount);
+                    resolvedArray.push("| " + resolved.trim() + " | " + sliceAmount.trim() + " |");
+                }
+                else {
+                    return [
+                        "ENS not resolved to address.\n" + exports.baseReviewMessage,
+                        isSuccess
+                    ];
+                }
             }
             else {
                 return [
-                    "Wrong format or invalide address. Please review your request and then submit it again.",
+                    "Invalid address or message format.\n" + exports.baseReviewMessage,
                     isSuccess
                 ];
             }
+        }
+        else {
+            return [
+                "Invalid number of slices or message format.\n" + exports.baseReviewMessage,
+                isSuccess
+            ];
         }
     }
     isSuccess = true;

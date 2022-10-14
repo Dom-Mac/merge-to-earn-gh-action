@@ -1,6 +1,9 @@
 import { ethers } from "ethers"
 import * as core from "@actions/core"
 
+export const baseReviewMessage =
+  "Please review your request and submit it again."
+
 export function onPrOpenedMessage(slicer: string) {
   return `### Hi Anon 
   This repository adopts a **merge to earn** mechanic and is represented by slicer: ${slicer}
@@ -43,26 +46,39 @@ export async function onSlicesRequestMessage(
   splitText: any
 ): Promise<[string, boolean]> {
   let totalSlices = 0
+  let isSuccess = false
   // custom message defines the slices | address table
   const newSplitText = splitText.slice(1)
-  let isSuccess = false
   const resolvedArray = []
+
   for (let i = 0; i < newSplitText.length; i++) {
     const el: string = newSplitText[i]
     const [address, sliceAmount] = el.split(":")
-    if (Number(sliceAmount) && isValidAddress(address)) {
-      const resolved = await resolveEns(address)
-      if (resolved) {
-        totalSlices += Number(sliceAmount)
-        resolvedArray.push(
-          "| " + resolved.trim() + " | " + sliceAmount.trim() + " |"
-        )
+    if (Number(sliceAmount)) {
+      if (isValidAddress(address)) {
+        const resolved = await resolveEns(address)
+        if (resolved) {
+          totalSlices += Number(sliceAmount)
+          resolvedArray.push(
+            "| " + resolved.trim() + " | " + sliceAmount.trim() + " |"
+          )
+        } else {
+          return [
+            "ENS not resolved to address.\n" + baseReviewMessage,
+            isSuccess
+          ]
+        }
       } else {
         return [
-          "Wrong format or invalide address. Please review your request and then submit it again.",
+          "Invalid address or message format.\n" + baseReviewMessage,
           isSuccess
         ]
       }
+    } else {
+      return [
+        "Invalid number of slices or message format.\n" + baseReviewMessage,
+        isSuccess
+      ]
     }
   }
   isSuccess = true
