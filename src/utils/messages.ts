@@ -39,28 +39,39 @@ export function isValidAddress(address: string) {
 }
 
 // TODO fix params type
-export async function onRequestMessage(splitText: any) {
+export async function onSlicesRequestMessage(
+  splitText: any
+): Promise<[string, boolean]> {
   let totalSlices = 0
   // custom message defines the slices | address table
   const newSplitText = splitText.slice(1)
-
+  let isSuccess = false
   const resolvedArray = []
   for (let i = 0; i < newSplitText.length; i++) {
     const el: string = newSplitText[i]
     const [address, sliceAmount] = el.split(":")
     if (Number(sliceAmount) && isValidAddress(address)) {
       const resolved = await resolveEns(address)
-      totalSlices += Number(sliceAmount)
-      resolvedArray.push(
-        "| " + resolved?.trim() + " | " + sliceAmount.trim() + " |"
-      )
+      if (resolved) {
+        totalSlices += Number(sliceAmount)
+        resolvedArray.push(
+          "| " + resolved.trim() + " | " + sliceAmount.trim() + " |"
+        )
+      } else {
+        return [
+          "Wrong format or invalide address. Please review your request and then submit it again.",
+          isSuccess
+        ]
+      }
     }
   }
+  isSuccess = true
 
-  return (
+  return [
     "### New upcoming slices distribution: \n| Address | Slices |\n| --- | --- |\n" +
-    resolvedArray.join(" \n ") +
-    "\n \n **Total slices minted:** " +
-    String(totalSlices)
-  )
+      resolvedArray.join(" \n ") +
+      "\n \n **Total slices minted:** " +
+      String(totalSlices),
+    isSuccess
+  ]
 }

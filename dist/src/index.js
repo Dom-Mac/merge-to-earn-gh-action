@@ -47,14 +47,18 @@ async function init() {
                 // Check if comment's user is the PR owner
                 if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
                     // Set bot message to fire in create comment
-                    botMessage = await (0, messages_1.onRequestMessage)(splitText);
+                    // m is defined based on success
+                    const [m, success] = await (0, messages_1.onSlicesRequestMessage)(splitText);
+                    botMessage = m;
                     // TODO: Add type checks on addresses and sliceAmounts
                     // Edit first bot comment
-                    const comments = await (0, fetch_1.default)(commentPayload.issue.comments_url);
-                    const firstBotComment = comments.filter((el) => el.user.login === "github-actions[bot]" &&
-                        el.body.includes("### Hi Anon"))[0];
-                    const newFirstMessage = (0, messages_1.onPrOpenedMessage)(slicer) + "\n" + botMessage;
-                    (0, githubHandler_1.editComment)(firstBotComment.id, newFirstMessage);
+                    if (success) {
+                        const comments = await (0, fetch_1.default)(commentPayload.issue.comments_url);
+                        const firstBotComment = comments.filter((el) => el.user.login === "github-actions[bot]" &&
+                            el.body.includes("### Hi Anon"))[0];
+                        const newFirstMessage = (0, messages_1.onPrOpenedMessage)(slicer) + "\n" + botMessage;
+                        (0, githubHandler_1.editComment)(firstBotComment.id, newFirstMessage);
+                    }
                 }
                 else {
                     botMessage =

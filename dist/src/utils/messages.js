@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onRequestMessage = exports.isValidAddress = exports.onPrOpenedMessage = void 0;
+exports.onSlicesRequestMessage = exports.isValidAddress = exports.onPrOpenedMessage = void 0;
 const ethers_1 = require("ethers");
 const core = __importStar(require("@actions/core"));
 function onPrOpenedMessage(slicer) {
@@ -62,23 +62,36 @@ function isValidAddress(address) {
 }
 exports.isValidAddress = isValidAddress;
 // TODO fix params type
-async function onRequestMessage(splitText) {
+async function onSlicesRequestMessage(splitText) {
     let totalSlices = 0;
     // custom message defines the slices | address table
     const newSplitText = splitText.slice(1);
+    let isSuccess = false;
     const resolvedArray = [];
     for (let i = 0; i < newSplitText.length; i++) {
         const el = newSplitText[i];
         const [address, sliceAmount] = el.split(":");
         if (Number(sliceAmount) && isValidAddress(address)) {
             const resolved = await resolveEns(address);
-            totalSlices += Number(sliceAmount);
-            resolvedArray.push("| " + (resolved === null || resolved === void 0 ? void 0 : resolved.trim()) + " | " + sliceAmount.trim() + " |");
+            if (resolved) {
+                totalSlices += Number(sliceAmount);
+                resolvedArray.push("| " + resolved.trim() + " | " + sliceAmount.trim() + " |");
+            }
+            else {
+                return [
+                    "Wrong format or invalide address. Please review your request and then submit it again.",
+                    isSuccess
+                ];
+            }
         }
     }
-    return ("### New upcoming slices distribution: \n| Address | Slices |\n| --- | --- |\n" +
-        resolvedArray.join(" \n ") +
-        "\n \n **Total slices minted:** " +
-        String(totalSlices));
+    isSuccess = true;
+    return [
+        "### New upcoming slices distribution: \n| Address | Slices |\n| --- | --- |\n" +
+            resolvedArray.join(" \n ") +
+            "\n \n **Total slices minted:** " +
+            String(totalSlices),
+        isSuccess
+    ];
 }
-exports.onRequestMessage = onRequestMessage;
+exports.onSlicesRequestMessage = onSlicesRequestMessage;

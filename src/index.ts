@@ -5,7 +5,7 @@ import {
   IssueCommentEvent,
   PullRequestEvent
 } from "@octokit/webhooks-definitions/schema"
-import { onPrOpenedMessage, onRequestMessage } from "./utils/messages"
+import { onPrOpenedMessage, onSlicesRequestMessage } from "./utils/messages"
 import fetch from "./utils/fetch"
 
 export default async function init() {
@@ -26,18 +26,22 @@ export default async function init() {
         // Check if comment's user is the PR owner
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
           // Set bot message to fire in create comment
-          botMessage = await onRequestMessage(splitText)
-
+          // m is defined based on success
+          const [m, success] = await onSlicesRequestMessage(splitText)
+          botMessage = m
           // TODO: Add type checks on addresses and sliceAmounts
           // Edit first bot comment
-          const comments = await fetch(commentPayload.issue.comments_url)
-          const firstBotComment = comments.filter(
-            (el: any) =>
-              el.user.login === "github-actions[bot]" &&
-              el.body.includes("### Hi Anon")
-          )[0]
-          const newFirstMessage = onPrOpenedMessage(slicer) + "\n" + botMessage
-          editComment(firstBotComment.id, newFirstMessage)
+          if (success) {
+            const comments = await fetch(commentPayload.issue.comments_url)
+            const firstBotComment = comments.filter(
+              (el: any) =>
+                el.user.login === "github-actions[bot]" &&
+                el.body.includes("### Hi Anon")
+            )[0]
+            const newFirstMessage =
+              onPrOpenedMessage(slicer) + "\n" + botMessage
+            editComment(firstBotComment.id, newFirstMessage)
+          }
         } else {
           botMessage =
             "User not authorized, only the PR owner can request slices"
