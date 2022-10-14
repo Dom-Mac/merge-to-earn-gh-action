@@ -76,7 +76,7 @@ async function init() {
         }
     }
     catch (error) {
-        core.setFailed(error.message);
+        console.log(error.message);
     }
 }
 exports.default = init;

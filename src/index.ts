@@ -56,7 +56,7 @@ export default async function init() {
       }
     }
   } catch (error: any) {
-    core.setFailed(error.message)
+    console.log(error.message)
   }
 }
 
