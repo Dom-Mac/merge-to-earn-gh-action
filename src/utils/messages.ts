@@ -23,18 +23,14 @@ const resolveEns = async (address: string) => {
   const alchemyId = core.getInput("alchemy_api_key")
   const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyId)
 
-  try {
-    const resolved =
-      address.substring(address.length - 4) == ".eth"
-        ? await provider.resolveName(address)
-        : address
-    if (address.substring(address.length - 4) === ".eth" && !resolved) {
-      throw Error
-    }
-    return resolved
-  } catch (error) {
-    core.setFailed("ENS not resolved")
+  const resolved =
+    address.substring(address.length - 4) == ".eth"
+      ? await provider.resolveName(address)
+      : address
+  if (address.substring(address.length - 4) === ".eth" && !resolved) {
+    throw Error
   }
+  return resolved
 }
 
 export function isValidAddress(address: string) {

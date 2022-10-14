@@ -45,18 +45,13 @@ exports.onPrOpenedMessage = onPrOpenedMessage;
 const resolveEns = async (address) => {
     const alchemyId = core.getInput("alchemy_api_key");
     const provider = new ethers_1.ethers.providers.AlchemyProvider("mainnet", alchemyId);
-    try {
-        const resolved = address.substring(address.length - 4) == ".eth"
-            ? await provider.resolveName(address)
-            : address;
-        if (address.substring(address.length - 4) === ".eth" && !resolved) {
-            throw Error;
-        }
-        return resolved;
+    const resolved = address.substring(address.length - 4) == ".eth"
+        ? await provider.resolveName(address)
+        : address;
+    if (address.substring(address.length - 4) === ".eth" && !resolved) {
+        throw Error;
     }
-    catch (error) {
-        core.setFailed("ENS not resolved");
-    }
+    return resolved;
 };
 function isValidAddress(address) {
     return address.match(/^0x[a-fA-F0-9]{40}$/) || address.match(/.eth$/);
