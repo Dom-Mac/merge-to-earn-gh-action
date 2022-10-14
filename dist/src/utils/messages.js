@@ -48,9 +48,6 @@ const resolveEns = async (address) => {
     const resolved = address.substring(address.length - 4) == ".eth"
         ? await provider.resolveName(address)
         : address;
-    if (address.substring(address.length - 4) === ".eth" && !resolved) {
-        throw Error;
-    }
     return resolved;
 };
 function isValidAddress(address) {

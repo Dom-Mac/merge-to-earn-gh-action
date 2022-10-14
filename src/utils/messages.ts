@@ -27,9 +27,7 @@ const resolveEns = async (address: string) => {
     address.substring(address.length - 4) == ".eth"
       ? await provider.resolveName(address)
       : address
-  if (address.substring(address.length - 4) === ".eth" && !resolved) {
-    throw Error
-  }
+
   return resolved
 }
 
