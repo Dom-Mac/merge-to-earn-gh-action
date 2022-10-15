@@ -51,7 +51,7 @@ export default async function init() {
           if (success) {
             const newFirstMessage =
               (await onPrOpenedMessage(author, slicerId, totalSlices)) +
-              "\n" +
+              "\n\n --- \n\n" +
               botMessage
 
             // If there is a pinned comment
