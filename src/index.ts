@@ -25,15 +25,18 @@ export default async function init() {
       let botMessage: string
 
       const commentPayload = <IssueCommentEvent>payload // type casting
-      const author = commentPayload.issue.user.login
-      const comments = await fetch(commentPayload.issue.comments_url)
-      const firstBotComment = comments.find(
-        (el: any) =>
-          el.user.login === "github-actions[bot]" &&
-          el.body.includes(`### 👋 Gm @${author}`)
-      )
+      if (
+        splitText[0].trim() === requiredText &&
+        commentPayload.issue.state == "open"
+      ) {
+        const author = commentPayload.issue.user.login
+        const comments = await fetch(commentPayload.issue.comments_url)
+        const firstBotComment = comments.find(
+          (el: any) =>
+            el.user.login === "github-actions[bot]" &&
+            el.body.includes(`### 👋 Gm @${author}`)
+        )
 
-      if (splitText[0].trim() === requiredText) {
         // Check if comment's user is the PR owner
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
           // Set bot message to fire in create comment
