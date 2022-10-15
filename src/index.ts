@@ -17,12 +17,13 @@ export default async function init() {
     // Triggers action on comment
     if (payload.comment) {
       const text: string = payload.comment.body
-      const requiredText = "### Contributor slices request"
+      const requiredText = "### Slice distribution request"
       const splitText = text.split("-")
       let botMessage: string
 
       if (splitText[0].trim() === requiredText) {
         const commentPayload = <IssueCommentEvent>payload // type casting
+        const author = commentPayload.issue.user.login
         // Check if comment's user is the PR owner
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
           // Set bot message to fire in create comment
@@ -36,15 +37,15 @@ export default async function init() {
             const firstBotComment = comments.filter(
               (el: any) =>
                 el.user.login === "github-actions[bot]" &&
-                el.body.includes("### Hi Anon")
+                el.body.includes(`### 👋 Gm @${author}`)
             )[0]
             const newFirstMessage =
-              onPrOpenedMessage(slicerId) + "\n" + botMessage
+              onPrOpenedMessage(author, slicerId) + "\n" + botMessage
             editComment(firstBotComment.id, newFirstMessage)
           }
         } else {
           botMessage =
-            "User not authorized, only the PR owner can request slices"
+            "User not authorized, only the PR owner can request slice distributions"
         }
         createComment(commentPayload.issue.number, botMessage)
       }
@@ -52,9 +53,10 @@ export default async function init() {
       // Triggers respectively the action on merge or the one on PR opened
       const prPayload = <PullRequestEvent>payload
       if (prPayload.action === "opened") {
+        const author = prPayload.pull_request.user.login
         createComment(
           prPayload.pull_request.number,
-          onPrOpenedMessage(slicerId)
+          onPrOpenedMessage(author, slicerId)
         )
       }
     }
