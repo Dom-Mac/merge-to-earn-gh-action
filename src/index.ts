@@ -11,7 +11,7 @@ import fetch from "./utils/fetch"
 export default async function init() {
   try {
     const payload = github.context.payload
-    const slicer = core.getInput("slicer")
+    const slicerId = core.getInput("slicer_id")
     console.log("payload", payload)
 
     // Triggers action on comment
@@ -39,7 +39,7 @@ export default async function init() {
                 el.body.includes("### Hi Anon")
             )[0]
             const newFirstMessage =
-              onPrOpenedMessage(slicer) + "\n" + botMessage
+              onPrOpenedMessage(slicerId) + "\n" + botMessage
             editComment(firstBotComment.id, newFirstMessage)
           }
         } else {
@@ -52,7 +52,10 @@ export default async function init() {
       // Triggers respectively the action on merge or the one on PR opened
       const prPayload = <PullRequestEvent>payload
       if (prPayload.action === "opened") {
-        createComment(prPayload.pull_request.number, onPrOpenedMessage(slicer))
+        createComment(
+          prPayload.pull_request.number,
+          onPrOpenedMessage(slicerId)
+        )
       }
     }
   } catch (error: any) {

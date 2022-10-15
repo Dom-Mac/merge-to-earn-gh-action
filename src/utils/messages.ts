@@ -4,7 +4,7 @@ import * as core from "@actions/core"
 export const baseReviewMessage =
   "Please review your request and submit it again."
 
-export function onPrOpenedMessage(slicer: string) {
+export function onPrOpenedMessage(slicerId: string) {
   return `### Hi Anon 
   This repository adopts a **merge to earn** mechanic and is represented by slicer: ${slicer}
   On a successful merge a defined number of **slices**, representing ownership over slicer's incomes and donations, will be minted to you, and funds are claimable trough [slice.so](https://slice.so) interface.
