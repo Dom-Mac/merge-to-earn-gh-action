@@ -38,16 +38,22 @@ export default async function init() {
           // Edit first bot comment
           if (success) {
             const comments = await fetch(commentPayload.issue.comments_url)
-            const firstBotComment = comments.filter(
+            const firstBotComment = comments.find(
               (el: any) =>
                 el.user.login === "github-actions[bot]" &&
                 el.body.includes(`### 👋 Gm @${author}`)
-            )[0]
+            )
             const newFirstMessage =
               (await onPrOpenedMessage(author, slicerId, totalSlices)) +
               "\n" +
               botMessage
-            editComment(firstBotComment.id, newFirstMessage)
+
+            // If there is a pinned comment
+            if (firstBotComment) {
+              editComment(firstBotComment.id, newFirstMessage)
+            } else {
+              createComment(commentPayload.issue.number, newFirstMessage)
+            }
           }
         } else {
           botMessage =
