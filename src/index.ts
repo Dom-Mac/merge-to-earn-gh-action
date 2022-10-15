@@ -7,6 +7,7 @@ import {
 } from "@octokit/webhooks-definitions/schema"
 import { onPrOpenedMessage, onSlicesRequestMessage } from "./utils/messages"
 import fetch from "./utils/fetch"
+import { sliceCore } from "./utils/initContracts"
 
 export default async function init() {
   try {
@@ -28,7 +29,10 @@ export default async function init() {
         if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
           // Set bot message to fire in create comment
           // m is defined based on success
-          const [m, success] = await onSlicesRequestMessage(splitText)
+          const [m, success, totalSlices] = await onSlicesRequestMessage(
+            slicerId,
+            splitText
+          )
           botMessage = m
           // TODO: Add type checks on addresses and sliceAmounts
           // Edit first bot comment
@@ -40,7 +44,9 @@ export default async function init() {
                 el.body.includes(`### 👋 Gm @${author}`)
             )[0]
             const newFirstMessage =
-              onPrOpenedMessage(author, slicerId) + "\n" + botMessage
+              (await onPrOpenedMessage(author, slicerId, totalSlices)) +
+              "\n" +
+              botMessage
             editComment(firstBotComment.id, newFirstMessage)
           }
         } else {
@@ -53,10 +59,11 @@ export default async function init() {
       // Triggers respectively the action on merge or the one on PR opened
       const prPayload = <PullRequestEvent>payload
       if (prPayload.action === "opened") {
+        const totalSlices = Number(await sliceCore.totalSupply(slicerId))
         const author = prPayload.pull_request.user.login
         createComment(
           prPayload.pull_request.number,
-          onPrOpenedMessage(author, slicerId)
+          await onPrOpenedMessage(author, slicerId, totalSlices)
         )
       }
     }

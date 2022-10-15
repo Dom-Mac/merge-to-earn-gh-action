@@ -1,12 +1,16 @@
 import formatNumber from "./formatNumber"
+import { sliceCore } from "./initContracts"
 import { resolveEns, isValidAddress } from "./resolveEns"
 
 export const baseReviewMessage =
   "Please review your request and submit it again."
 
-export function onPrOpenedMessage(author: string, slicerId: string) {
+export async function onPrOpenedMessage(
+  author: string,
+  slicerId: string,
+  totalSlices: number
+) {
   const today = new Date()
-  const totalSlices = 0 // TODO: Fetch slices
   return `### 👋 Gm @${author}
 
   This repository uses [Merge to earn](...) to reward contributors, and is represented by [Slicer #${slicerId}](slice.so/slicer/${slicerId}).
@@ -29,10 +33,12 @@ export function onPrOpenedMessage(author: string, slicerId: string) {
 
 // TODO fix params type
 export async function onSlicesRequestMessage(
+  slicerId: string,
   splitText: any
-): Promise<[string, boolean]> {
-  let totalSlices = 0
+): Promise<[string, boolean, number]> {
+  let slicesToBeMinted = 0
   let isSuccess = false
+  let totalSlices = 0
   const newSplitText = splitText.slice(1)
   const resolvedArray = []
 
@@ -43,36 +49,47 @@ export async function onSlicesRequestMessage(
       if (isValidAddress(address)) {
         const resolved = await resolveEns(address)
         if (resolved) {
-          totalSlices += Number(sliceAmount)
+          slicesToBeMinted += Number(sliceAmount)
           resolvedArray.push(
             "| " + resolved.trim() + " | " + sliceAmount.trim() + " |"
           )
         } else {
           return [
             "ENS not resolved to address.\n" + baseReviewMessage,
-            isSuccess
+            isSuccess,
+            totalSlices
           ]
         }
       } else {
         return [
           "Invalid address or message format.\n" + baseReviewMessage,
-          isSuccess
+          isSuccess,
+          totalSlices
         ]
       }
     } else {
       return [
         "Invalid number of slices or message format.\n" + baseReviewMessage,
-        isSuccess
+        isSuccess,
+        totalSlices
       ]
     }
   }
   isSuccess = true
 
+  totalSlices = Number(await sliceCore.totalSupply(slicerId))
+
   return [
     "### Upcoming slice distribution: \n| Address | Slices |\n| --- | --- |\n" +
       resolvedArray.join(" \n ") +
-      "\n \n **Total slices to be minted:** " +
-      String(totalSlices),
-    isSuccess
+      "\n \n **Slices to be minted: **" +
+      String(slicesToBeMinted) +
+      `(${
+        Math.floor(
+          (slicesToBeMinted / (totalSlices + slicesToBeMinted)) * 100000
+        ) / 1000
+      }% of ${formatNumber(totalSlices + slicesToBeMinted)} new total slices)`,
+    isSuccess,
+    totalSlices
   ]
 }
