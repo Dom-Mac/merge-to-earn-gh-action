@@ -2,7 +2,7 @@ import * as core from "@actions/core"
 import { ethers } from "ethers"
 
 export const resolveEns = async (address: string) => {
-  const alchemyId = core.getInput("alchemy_api_key")
+  const alchemyId = process.env.ALCHEMY_ID
   const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyId)
 
   const resolved =
