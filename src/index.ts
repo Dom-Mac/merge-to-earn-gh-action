@@ -8,11 +8,13 @@ import {
 import { onPrOpenedMessage, onSlicesRequestMessage } from "./utils/messages"
 import fetch from "./utils/fetch"
 import { sliceCore } from "./utils/initContracts"
+import { controllerCheck } from "./utils/controllerCheck"
 
 export default async function init() {
   try {
     const payload = github.context.payload
     const slicerId = core.getInput("slicer_id")
+    const safeAddress = core.getInput("safe_address")
     console.log("payload", payload)
 
     // Triggers action on comment
@@ -52,6 +54,7 @@ export default async function init() {
             if (firstBotComment) {
               editComment(firstBotComment.id, newFirstMessage)
             } else {
+              await controllerCheck(slicerId, safeAddress)
               createComment(commentPayload.issue.number, newFirstMessage)
             }
           }
@@ -62,6 +65,8 @@ export default async function init() {
         createComment(commentPayload.issue.number, botMessage)
       }
     } else {
+      await controllerCheck(slicerId, safeAddress)
+
       // Triggers respectively the action on merge or the one on PR opened
       const prPayload = <PullRequestEvent>payload
       if (prPayload.action === "opened") {
