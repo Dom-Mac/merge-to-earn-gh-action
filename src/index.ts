@@ -10,11 +10,12 @@ import fetch from "./utils/fetch"
 import { sliceCore } from "./utils/initContracts"
 import { controllerCheck } from "./utils/controllerCheck"
 
+export const slicerId = core.getInput("slicer_id")
+export const safeAddress = core.getInput("safe_address")
+
 export default async function init() {
   try {
     const payload = github.context.payload
-    const slicerId = core.getInput("slicer_id")
-    const safeAddress = core.getInput("safe_address")
     console.log("payload", payload)
 
     // Triggers action on comment
