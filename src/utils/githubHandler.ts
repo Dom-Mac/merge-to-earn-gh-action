@@ -3,7 +3,6 @@ import * as github from "@actions/github"
 
 export const slicerId = core.getInput("slicer_id")
 export const safeAddress = core.getInput("safe_address")
-console.log(safeAddress, "safe")
 
 export function getOctokit() {
   const token = core.getInput("GITHUB_TOKEN", { required: true })
