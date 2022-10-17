@@ -7,8 +7,6 @@ inputs:
     required: true
   GITHUB_TOKEN:
     required: true
-env:
-  ALCHEMY_ID: ${{ env.ALCHEMY_ID }}
 
 runs:
   using: "node16"
