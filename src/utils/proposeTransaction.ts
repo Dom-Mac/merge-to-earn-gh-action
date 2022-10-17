@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { safeAddress, slicerId } from ".."
+import { safeAddress, slicerId } from "./githubHandler"
 import fetchPost from "./fetchPost"
 import { mteWallet, safe, sliceCoreAddress } from "./initContracts"
 

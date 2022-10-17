@@ -23,9 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editComment = exports.createComment = exports.getOctokit = void 0;
+exports.editComment = exports.createComment = exports.getOctokit = exports.safeAddress = exports.slicerId = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
+exports.slicerId = core.getInput("slicer_id");
+exports.safeAddress = core.getInput("safe_address");
 function getOctokit() {
     const token = core.getInput("GITHUB_TOKEN", { required: true });
     return github.getOctokit(token);

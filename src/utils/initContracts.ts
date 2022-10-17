@@ -3,7 +3,7 @@ import { SliceCore } from "../types/SliceCore"
 import { GnosisSafe } from "../types/GnosisSafe"
 import { sliceCoreInterface } from "../abi/SliceCore"
 import { gnosisSafeInterface } from "../abi/GnosisSafe"
-import { safeAddress } from ".."
+import { safeAddress } from "./githubHandler"
 
 export const sliceCoreAddress = "0x21da1b084175f95285B49b22C018889c45E1820d" // mainnet
 const alchemyId = "3H_NfTOi34tjHTLUt3ZUw5zVJfkx8NTM"

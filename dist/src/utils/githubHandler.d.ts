@@ -1,3 +1,5 @@
+export declare const slicerId: string;
+export declare const safeAddress: string;
 export declare function getOctokit(): import("@octokit/core").Octokit & import("@octokit/plugin-rest-endpoint-methods/dist-types/types").Api & {
     paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
 };

@@ -1,6 +1,10 @@
-import * as core from "@actions/core"
 import * as github from "@actions/github"
-import { createComment, editComment } from "./utils/githubHandler"
+import {
+  createComment,
+  editComment,
+  safeAddress,
+  slicerId
+} from "./utils/githubHandler"
 import {
   IssueCommentEvent,
   PullRequestEvent
@@ -10,12 +14,8 @@ import fetch from "./utils/fetch"
 import { sliceCore } from "./utils/initContracts"
 import { controllerCheck } from "./utils/controllerCheck"
 
-export const slicerId = core.getInput("slicer_id")
-export const safeAddress = core.getInput("safe_address")
-
 export async function init() {
   try {
-    console.log(safeAddress, "index safe addr")
     const payload = github.context.payload
     console.log("payload", payload)
 

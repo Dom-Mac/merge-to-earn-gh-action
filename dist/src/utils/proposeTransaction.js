@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.proposeTransaction = void 0;
 const ethers_1 = require("ethers");
-const __1 = require("..");
+const githubHandler_1 = require("./githubHandler");
 const fetchPost_1 = __importDefault(require("./fetchPost"));
 const initContracts_1 = require("./initContracts");
 const env = "mainnet";
@@ -20,7 +20,7 @@ const proposeTransaction = async (mints) => {
         const signature = (await initContracts_1.mteWallet.signMessage(ethers_1.ethers.utils.arrayify(hashToSign)))
             .replace(/1b$/, "1f")
             .replace(/1c$/, "20");
-        const endpoint = `api/v1/safes/${__1.safeAddress}/multisig-transactions/`;
+        const endpoint = `api/v1/safes/${githubHandler_1.safeAddress}/multisig-transactions/`;
         const body = {
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
@@ -54,7 +54,7 @@ const proposeTransaction = async (mints) => {
 exports.proposeTransaction = proposeTransaction;
 const getEstimate = async (data) => {
     const relayUrl = `https://safe-relay.gnosis.io/`; // only mainnet
-    const endpoint = `api/v1/safes/${__1.safeAddress}/transactions/estimate/`;
+    const endpoint = `api/v1/safes/${githubHandler_1.safeAddress}/transactions/estimate/`;
     const body = {
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
@@ -83,7 +83,7 @@ const formatResliceData = (mints) => {
         .keccak256(ethers_1.ethers.utils.toUtf8Bytes("reslice(uint256,address[],int32[])"))
         .slice(0, 10) +
         ethers_1.ethers.utils.defaultAbiCoder
-            .encode(["uint256", "address[]", "int32[]"], [__1.slicerId, accounts, tokenDiffs])
+            .encode(["uint256", "address[]", "int32[]"], [githubHandler_1.slicerId, accounts, tokenDiffs])
             .slice(2));
 };
 // TODO: (future) Add helper to condense multiple reslice tx proposals into a single one

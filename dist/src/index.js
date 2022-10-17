@@ -26,19 +26,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.init = exports.safeAddress = exports.slicerId = void 0;
-const core = __importStar(require("@actions/core"));
+exports.init = void 0;
 const github = __importStar(require("@actions/github"));
 const githubHandler_1 = require("./utils/githubHandler");
 const messages_1 = require("./utils/messages");
 const fetch_1 = __importDefault(require("./utils/fetch"));
 const initContracts_1 = require("./utils/initContracts");
 const controllerCheck_1 = require("./utils/controllerCheck");
-exports.slicerId = core.getInput("slicer_id");
-exports.safeAddress = core.getInput("safe_address");
 async function init() {
     try {
-        console.log(exports.safeAddress, "index safe addr");
         const payload = github.context.payload;
         console.log("payload", payload);
         // Triggers action on comment
@@ -59,12 +55,12 @@ async function init() {
                 if (commentPayload.comment.user.id === commentPayload.issue.user.id) {
                     // Set bot message to fire in create comment
                     // m is defined based on success
-                    const [m, success, totalSlices] = await (0, messages_1.onSlicesRequestMessage)(exports.slicerId, splitText);
+                    const [m, success, totalSlices] = await (0, messages_1.onSlicesRequestMessage)(githubHandler_1.slicerId, splitText);
                     botMessage = m;
                     // TODO: Add type checks on addresses and sliceAmounts
                     // Edit first bot comment
                     if (success) {
-                        const newFirstMessage = (0, messages_1.onPrOpenedMessage)(author, exports.slicerId, totalSlices) +
+                        const newFirstMessage = (0, messages_1.onPrOpenedMessage)(author, githubHandler_1.slicerId, totalSlices) +
                             "\n\n --- \n\n" +
                             botMessage;
                         // If there is a pinned comment
@@ -72,7 +68,7 @@ async function init() {
                             (0, githubHandler_1.editComment)(firstBotComment.id, newFirstMessage);
                         }
                         else {
-                            await (0, controllerCheck_1.controllerCheck)(exports.slicerId, exports.safeAddress);
+                            await (0, controllerCheck_1.controllerCheck)(githubHandler_1.slicerId, githubHandler_1.safeAddress);
                             (0, githubHandler_1.createComment)(commentPayload.issue.number, newFirstMessage);
                         }
                     }
@@ -88,13 +84,13 @@ async function init() {
             }
         }
         else {
-            await (0, controllerCheck_1.controllerCheck)(exports.slicerId, exports.safeAddress);
+            await (0, controllerCheck_1.controllerCheck)(githubHandler_1.slicerId, githubHandler_1.safeAddress);
             // Triggers respectively the action on merge or the one on PR opened
             const prPayload = payload;
             if (prPayload.action === "opened") {
-                const totalSlices = Number(await initContracts_1.sliceCore.totalSupply(exports.slicerId));
+                const totalSlices = Number(await initContracts_1.sliceCore.totalSupply(githubHandler_1.slicerId));
                 const author = prPayload.pull_request.user.login;
-                (0, githubHandler_1.createComment)(prPayload.pull_request.number, (0, messages_1.onPrOpenedMessage)(author, exports.slicerId, totalSlices));
+                (0, githubHandler_1.createComment)(prPayload.pull_request.number, (0, messages_1.onPrOpenedMessage)(author, githubHandler_1.slicerId, totalSlices));
             }
         }
     }
