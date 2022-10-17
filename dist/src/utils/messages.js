@@ -1,103 +1,86 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onSlicesRequestMessage = exports.isValidAddress = exports.onPrOpenedMessage = exports.baseReviewMessage = void 0;
-const ethers_1 = require("ethers");
-const core = __importStar(require("@actions/core"));
+exports.onSlicesRequestMessage = exports.onPrOpenedMessage = exports.baseReviewMessage = void 0;
+const formatNumber_1 = __importDefault(require("./formatNumber"));
+const initContracts_1 = require("./initContracts");
+const resolveEns_1 = require("./resolveEns");
 exports.baseReviewMessage = "Please review your request and submit it again.";
-function onPrOpenedMessage(slicer) {
-    return `### Hi Anon 
-  This repository adopts a **merge to earn** mechanic and is represented by slicer: ${slicer}
-  On a successful merge a defined number of **slices**, representing ownership over slicer's incomes and donations, will be minted to you, and funds are claimable trough [slice.so](https://slice.so) interface.
+function onPrOpenedMessage(author, slicerId, totalSlices) {
+    const today = new Date();
+    return `### 👋 Gm @${author}
+
+  This repository uses [Merge to earn](...) to reward contributors, and is represented by [Slicer #${slicerId}](slice.so/slicer/${slicerId}).
   
-  To request slices please copy and paste the following message in comments and only define you address and the desidered amount of slices.
+  When merging a pull request, contributors receive an agreed number of **slices** representing ownership over the project and its earnings. Funds will then be claimable on [slice.so](slice.so).
+  
+  To request slices, comment with the following message by specifying the **Ethereum addresses** of the contributors involved and the **desired amount of slices** for each.
   
   \`\`\`
-  ### Contributor slices request
-  - youraddress.eth:3000
-  - another.address.eth:2000
+  ### Slice distribution request
+  
+  - contributor.eth : 1000
+  - 0x... : 500
+  - reviewer.eth : 50
   \`\`\`
+  
+  > Total slices on ${today.toDateString()}: ${(0, formatNumber_1.default)(totalSlices)}
   `;
 }
 exports.onPrOpenedMessage = onPrOpenedMessage;
-const resolveEns = async (address) => {
-    const alchemyId = core.getInput("alchemy_api_key");
-    const provider = new ethers_1.ethers.providers.AlchemyProvider("mainnet", alchemyId);
-    const resolved = address.substring(address.length - 4) == ".eth"
-        ? await provider.resolveName(address)
-        : address;
-    return resolved;
-};
-function isValidAddress(address) {
-    return address.match(/^0x[a-fA-F0-9]{40}$/) || address.match(/.eth$/);
-}
-exports.isValidAddress = isValidAddress;
 // TODO fix params type
-async function onSlicesRequestMessage(splitText) {
-    let totalSlices = 0;
+async function onSlicesRequestMessage(slicerId, splitText) {
+    let slicesToBeMinted = 0;
     let isSuccess = false;
+    let totalSlices = 0;
     const newSplitText = splitText.slice(1);
     const resolvedArray = [];
     for (let i = 0; i < newSplitText.length; i++) {
         const el = newSplitText[i];
         const [address, sliceAmount] = el.split(":");
         if (Number(sliceAmount)) {
-            if (isValidAddress(address)) {
-                const resolved = await resolveEns(address);
+            if ((0, resolveEns_1.isValidAddress)(address)) {
+                const resolved = await (0, resolveEns_1.resolveEns)(address);
                 if (resolved) {
-                    totalSlices += Number(sliceAmount);
+                    slicesToBeMinted += Number(sliceAmount);
                     resolvedArray.push("| " + resolved.trim() + " | " + sliceAmount.trim() + " |");
                 }
                 else {
                     return [
                         "ENS not resolved to address.\n" + exports.baseReviewMessage,
-                        isSuccess
+                        isSuccess,
+                        totalSlices
                     ];
                 }
             }
             else {
                 return [
                     "Invalid address or message format.\n" + exports.baseReviewMessage,
-                    isSuccess
+                    isSuccess,
+                    totalSlices
                 ];
             }
         }
         else {
             return [
                 "Invalid number of slices or message format.\n" + exports.baseReviewMessage,
-                isSuccess
+                isSuccess,
+                totalSlices
             ];
         }
     }
     isSuccess = true;
+    totalSlices = Number(await initContracts_1.sliceCore.totalSupply(slicerId));
     return [
-        "### New upcoming slices distribution: \n| Address | Slices |\n| --- | --- |\n" +
+        "### Upcoming slice distribution: \n| Address | Slices |\n| --- | --- |\n" +
             resolvedArray.join(" \n ") +
-            "\n \n **Total slices minted:** " +
-            String(totalSlices),
-        isSuccess
+            "\n \n **Slices to be minted: **" +
+            String(slicesToBeMinted) +
+            `(${Math.floor((slicesToBeMinted / (totalSlices + slicesToBeMinted)) * 100000) / 1000}% of ${(0, formatNumber_1.default)(totalSlices + slicesToBeMinted)} new total slices)`,
+        isSuccess,
+        totalSlices
     ];
 }
 exports.onSlicesRequestMessage = onSlicesRequestMessage;

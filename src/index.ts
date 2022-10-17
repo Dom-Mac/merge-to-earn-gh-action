@@ -51,7 +51,7 @@ export default async function init() {
           // Edit first bot comment
           if (success) {
             const newFirstMessage =
-              (await onPrOpenedMessage(author, slicerId, totalSlices)) +
+              onPrOpenedMessage(author, slicerId, totalSlices) +
               "\n\n --- \n\n" +
               botMessage
 
@@ -84,7 +84,7 @@ export default async function init() {
         const author = prPayload.pull_request.user.login
         createComment(
           prPayload.pull_request.number,
-          await onPrOpenedMessage(author, slicerId, totalSlices)
+          onPrOpenedMessage(author, slicerId, totalSlices)
         )
       }
     }

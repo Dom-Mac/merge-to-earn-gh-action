@@ -5,7 +5,7 @@ import { resolveEns, isValidAddress } from "./resolveEns"
 export const baseReviewMessage =
   "Please review your request and submit it again."
 
-export async function onPrOpenedMessage(
+export function onPrOpenedMessage(
   author: string,
   slicerId: string,
   totalSlices: number

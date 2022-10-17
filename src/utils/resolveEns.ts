@@ -1,4 +1,3 @@
-import * as core from "@actions/core"
 import { ethers } from "ethers"
 
 export const resolveEns = async (address: string) => {
@@ -9,7 +8,7 @@ export const resolveEns = async (address: string) => {
     address.substring(address.length - 4) == ".eth"
       ? await provider.resolveName(address)
       : address
-
+  console.log(resolved)
   return resolved
 }
 
