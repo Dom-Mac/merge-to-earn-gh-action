@@ -7,9 +7,9 @@ inputs:
     required: true
   GITHUB_TOKEN:
     required: true
-env:
-  ALCHEMY_ID: "ciaociao"
 
 runs:
   using: "node16"
   main: "dist/src/index.js"
+  env:
+    ALCHEMY_ID: "ciaociao"
