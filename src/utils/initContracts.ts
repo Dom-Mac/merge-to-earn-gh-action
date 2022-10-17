@@ -8,6 +8,7 @@ import { safeAddress } from ".."
 export const sliceCoreAddress = "0x21da1b084175f95285B49b22C018889c45E1820d" // mainnet
 const alchemyId = "3H_NfTOi34tjHTLUt3ZUw5zVJfkx8NTM"
 const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyId)
+console.log(safeAddress, "safe init")
 
 export const sliceCore = new ethers.Contract(
   sliceCoreAddress,
