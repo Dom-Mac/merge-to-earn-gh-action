@@ -20,6 +20,7 @@ export default async function init() {
 
     // Triggers action on comment
     if (payload.comment) {
+      console.log("------ comment -----")
       const text: string = payload.comment.body
       const requiredText = "### Slice distribution request"
       const splitText = text.split("-")

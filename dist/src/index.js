@@ -42,6 +42,7 @@ async function init() {
         console.log("payload", payload);
         // Triggers action on comment
         if (payload.comment) {
+            console.log("------ comment -----");
             const text = payload.comment.body;
             const requiredText = "### Slice distribution request";
             const splitText = text.split("-");
