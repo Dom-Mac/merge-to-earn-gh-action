@@ -11,5 +11,3 @@ inputs:
 runs:
   using: "node16"
   main: "dist/src/index.js"
-  env:
-    ALCHEMY_ID: "ciaociao"

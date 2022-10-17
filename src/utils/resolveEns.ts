@@ -1,7 +1,7 @@
 import { ethers } from "ethers"
 
 export const resolveEns = async (address: string) => {
-  const alchemyId = process.env.ALCHEMY_ID
+  const alchemyId = "3H_NfTOi34tjHTLUt3ZUw5zVJfkx8NTM"
   const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyId)
 
   const resolved =
