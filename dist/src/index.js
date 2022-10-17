@@ -36,9 +36,9 @@ const initContracts_1 = require("./utils/initContracts");
 const controllerCheck_1 = require("./utils/controllerCheck");
 exports.slicerId = core.getInput("slicer_id");
 exports.safeAddress = core.getInput("safe_address");
-console.log(exports.safeAddress, "index safe addr");
 async function init() {
     try {
+        console.log(exports.safeAddress, "index safe addr");
         const payload = github.context.payload;
         console.log("payload", payload);
         // Triggers action on comment
