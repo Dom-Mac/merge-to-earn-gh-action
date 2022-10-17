@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.safeAddress = exports.slicerId = void 0;
+exports.init = exports.safeAddress = exports.slicerId = void 0;
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 const githubHandler_1 = require("./utils/githubHandler");
@@ -102,5 +102,5 @@ async function init() {
         console.log(error.message);
     }
 }
-exports.default = init;
+exports.init = init;
 init();

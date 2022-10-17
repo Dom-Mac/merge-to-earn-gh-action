@@ -14,7 +14,7 @@ export const slicerId = core.getInput("slicer_id")
 export const safeAddress = core.getInput("safe_address")
 console.log(safeAddress, "index safe addr")
 
-export default async function init() {
+export async function init() {
   try {
     const payload = github.context.payload
     console.log("payload", payload)
