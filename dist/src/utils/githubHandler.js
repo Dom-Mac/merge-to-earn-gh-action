@@ -28,6 +28,7 @@ const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 exports.slicerId = core.getInput("slicer_id");
 exports.safeAddress = core.getInput("safe_address");
+console.log(exports.safeAddress, "safe");
 function getOctokit() {
     const token = core.getInput("GITHUB_TOKEN", { required: true });
     return github.getOctokit(token);
