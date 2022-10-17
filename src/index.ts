@@ -12,6 +12,7 @@ import { controllerCheck } from "./utils/controllerCheck"
 
 export const slicerId = core.getInput("slicer_id")
 export const safeAddress = core.getInput("safe_address")
+console.log(safeAddress, "index safe addr")
 
 export default async function init() {
   try {
