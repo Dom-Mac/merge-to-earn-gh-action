@@ -13,39 +13,45 @@ const env = "mainnet";
 const baseUrl = `https://safe-transaction-${env}.safe.global/`; // temp endpoint?
 const proposeTransaction = async (mints) => {
     try {
-        const resliceData = formatResliceData(mints);
-        const [nonce, safeTxGas] = await getEstimate(resliceData);
-        const transactionHash = await getTransactionHash(nonce, safeTxGas, resliceData);
-        const hashToSign = transactionHash;
-        const signature = (await initContracts_1.mteWallet.signMessage(ethers_1.ethers.utils.arrayify(hashToSign)))
-            .replace(/1b$/, "1f")
-            .replace(/1c$/, "20");
-        const endpoint = `api/v1/safes/${githubHandler_1.safeAddress}/multisig-transactions/`;
-        const body = {
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify({
-                to: initContracts_1.sliceCoreAddress,
-                value: 0,
-                data: resliceData,
-                operation: 0,
-                safeTxGas,
-                baseGas: 0,
-                gasPrice: 0,
-                gasToken: null,
-                refundReceiver: null,
-                nonce,
-                contractTransactionHash: transactionHash,
-                sender: initContracts_1.mteWallet.address,
-                signature,
-                origin: "Merge to earn"
-            }),
-            method: "POST"
-        };
-        const res = await (0, fetchPost_1.default)(baseUrl + endpoint, body);
-        console.log({ res }); // TODO: Check res
-        if (res.status != 201) {
-            throw Error("Proposal unsuccessful");
-        }
+        // const resliceData = formatResliceData(mints)
+        // const [nonce, safeTxGas] = await getEstimate(resliceData)
+        // const transactionHash = await getTransactionHash(
+        //   nonce,
+        //   safeTxGas,
+        //   resliceData
+        // )
+        // const hashToSign = transactionHash
+        // const signature = (
+        //   await mteWallet.signMessage(ethers.utils.arrayify(hashToSign))
+        // )
+        //   .replace(/1b$/, "1f")
+        //   .replace(/1c$/, "20")
+        // const endpoint = `api/v1/safes/${safeAddress}/multisig-transactions/`
+        // const body = {
+        //   headers: { "Content-type": "application/json" },
+        //   body: JSON.stringify({
+        //     to: sliceCoreAddress,
+        //     value: 0,
+        //     data: resliceData,
+        //     operation: 0,
+        //     safeTxGas,
+        //     baseGas: 0,
+        //     gasPrice: 0,
+        //     gasToken: null,
+        //     refundReceiver: null,
+        //     nonce,
+        //     contractTransactionHash: transactionHash,
+        //     sender: mteWallet.address,
+        //     signature,
+        //     origin: "Merge to earn"
+        //   }),
+        //   method: "POST"
+        // }
+        // const res: any = await fetchPost(baseUrl + endpoint, body)
+        // console.log({ res }) // TODO: Check res
+        // if (res.status != 201) {
+        //   throw Error("Proposal unsuccessful")
+        // }
     }
     catch (err) {
         console.log(err);

@@ -21,4 +21,4 @@ export const safe = new ethers.Contract(
   provider
 ) as GnosisSafe
 
-export const mteWallet = new ethers.Wallet(String("process.env.PK")) // TODO: Add env variables
+// export const mteWallet = new ethers.Wallet(String("process.env.PK")) // TODO: Add env variables
