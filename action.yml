@@ -1,4 +1,4 @@
-name: "MTE"
+name: "MTE test2"
 description: "Greet someone and record the times"
 inputs:
   safe_address:
