@@ -1,5 +1,5 @@
 name: "MTE"
-description: "Greet someone and record the times"
+description: "Mte desc"
 inputs:
   safe_address:
     required: true
