@@ -1,5 +1,5 @@
 name: "MTE"
-description: "Greet"
+description: "Greet hi"
 inputs:
   safe_address:
     required: true
