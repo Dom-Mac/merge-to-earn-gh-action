@@ -1,3 +1,6 @@
+# ⚠️ NOT mantained anymore | Please refer to the new [Merge to Earn GitHub App](https://github.com/slice-so/merge-to-earn) ⚠️
+
+
 # Merge to earn - Github action
 
 **Automate rewarding contributors with a slice of ownership over a project and its earnings.**
