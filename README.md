@@ -1,5 +1,5 @@
 # ⚠️ NOT mantained anymore ⚠️ 
-# Please refer to the new [Merge to Earn GitHub App](https://github.com/slice-so/merge-to-earn) ⚠️
+# Please refer to the new [Merge to Earn GitHub App](https://github.com/slice-so/merge-to-earn) 
 
 
 # Merge to earn - Github action
